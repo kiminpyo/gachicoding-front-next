@@ -20,11 +20,8 @@ const Board = () =>{
     const {state} = useSelector((state) => state.post);
     const {pageable} = useSelector((state) => state.post);
     const [searchInput, onChangeSearchInput] = useInput('');
-    const userid = window.localStorage.getItem('user')
-    console.log(userid)
-    console.log(searchInput)
-    console.log(pageable);
-    
+
+
 
     const selectBefore = (
         <Select defaultValue="제목" className="select-before">
@@ -33,19 +30,8 @@ const Board = () =>{
         </Select>
       );
  
-    if(userid){
-        dispatch({
-            type: LOAD_USER_REQUEST,
-            data: userid
-        })
-    }
-    useEffect(() =>{
-        dispatch({
-            type: BOARDS_REQUEST,
-           
-        })
-        
-    },[])
+   
+ 
     
     const onChange = useCallback((pageNumber) => {
             
@@ -108,8 +94,11 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
         type: BOARDS_REQUEST
      });
      store.dispatch({
-        type: NOTICELIST_REQUEST
+        type: LOAD_USER_REQUEST
      }); 
+     store.dispatch({
+        type: NOTICELIST_REQUEST
+     });
  
     store.dispatch(END);
     await store.sagaTask.toPromise();

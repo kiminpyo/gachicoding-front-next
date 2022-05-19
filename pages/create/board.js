@@ -5,30 +5,28 @@ import useInput from "../../hooks/useInput";
 import {Form, Input, Button} from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { BOARD_CREATE_REQUEST, IMAGE_UPLOAD_REQUEST, IMAGE_UPLOAD_SUCCESS, uploadImage } from '../../reducers/post';
-import { ConsoleSqlOutlined } from '@ant-design/icons';
+import ImagePreview from '../../components/ImagePreview';
 const CreateBoard = () =>{
 
     const imgInput = useRef();
-    const [text, onChangeHandler] = useInput('')
+    const [title, onChangetitleHandler] = useInput('')
+    const [text, onChangeCotentHandler] = useInput('')
     const dispatch = useDispatch();
     const {img} = useSelector((state) => state.post);
- 
+    console.log(img);
     const onSubmitForm = useCallback(() => {
 
         if(!text || !text.trim()){
             return alert('게시글을 작성하세요')
         }
-        const formData = new FormData();
         console.log(img)
-        const imgtext =  document.getElementById('img')
-     
-        const data = imgtext.innerHTML + text;
             dispatch({
                     type: BOARD_CREATE_REQUEST,
                     data: {          
-                        boardContent: data,
-                        boardTitle: "string",
-                        boardViews: 0
+                        
+                        boardTitle: title,
+                        boardContent: text,
+                        files: img,
                     }
             })
             
@@ -45,8 +43,8 @@ const CreateBoard = () =>{
         const onChangeImages =useCallback((e) =>{
             console.log('images', e.target.files)
             const imageFormData = new FormData();
-            [].forEach.call(e.target.files, (file)=>{
-                imageFormData.append('file', file)        
+            [].forEach.call(e.target.files, (files)=>{
+                imageFormData.append('files', files)        
             });
                 dispatch({
                 type: IMAGE_UPLOAD_REQUEST,
@@ -66,28 +64,28 @@ const CreateBoard = () =>{
             encType="multipart/form-data" 
             onFinish={onSubmitForm}>
               <div style={{width:"100%", display:'flex', flexDirection: 'column'}}>
-              <label htmlFor="">제목</label>
-            <input type="text" />
+              <label htmlFor="">제목:</label>
+            <input type="text" value ={title}  onChange={onChangetitleHandler}/>
             <br/>
             <label htmlFor="">해시태그</label>
             <input type="url" name="" id="" />
 
-            <label htmlFor="">내용</label>
-            <textarea name="" id="" cols="30" rows="10" value={text} onChange={onChangeHandler}>
-                
+            <label htmlFor="">내용:</label>
+            <textarea name="" id="" cols="30" rows="10" value={text} onChange={onChangeCotentHandler}>  
             </textarea>
-                  </div> 
-                 
-        <div  id="img">
-        { img ?  <img  src={img}/>: null}
-        </div>
+            <div style={{textAlign:'center', paddingTop:'30px'}}><h2>미리보기</h2></div>
+            <div style={{display:'flex', padding:'30px', width:'100%'}}> 
+            { img ?  img.map((v,i) => <ImagePreview key={i} data={v}/>): null}
+            </div>
+            </div> 
+                  
         <Button type="primary" htmlType="submit">글쓰기</Button>
         </Form>
         <form action="post"
         enctype="multipart/form-data" >
         <input
             type= "file"
-            name="file" 
+            name="files" 
             multiple 
             hidden 
             accept="image/*"

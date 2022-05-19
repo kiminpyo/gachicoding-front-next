@@ -11,13 +11,14 @@ import { BOARDS_DETAIL_REQUEST, BOARDS_REQUEST, BOARD_DELETE_REQUEST, BOARD_EDIT
 import BoardEditor from '../../components/BoardEditor';
 import Link from 'next/link';
 import MyButton from '../../components/MyButton';
+import { LOAD_USER_REQUEST } from '../../reducers/user';
 const detail = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     /* 게시판 번호불러오기 */
     const { id } = router.query;
     const {board}  = useSelector((state) => state.post);
-
+   
 
     useEffect(()=>{
         dispatch({
@@ -45,12 +46,39 @@ const detail = () => {
 
  
 
-    if(board){
+    if(JSON.stringify(board.fileList)){
+        /* arr */
+    
+        console.log(board.fileList)
+        console.log(JSON.stringify(board.fileList))
+        console.log(typeof JSON.parse(JSON.stringify(board.fileList)))
+        const fileListobj =JSON.parse(JSON.stringify(board.fileList));
+        console.log(Object.keys(fileListobj))
+        console.log(Object.values(fileListobj))
+        const fileList = Object.values(fileListobj);
+        fileList.map(v=> console.log(v))
 
+       
+   
+        
+
+    
+       
         return <AppLayout>
-            <div>{board.boardTitle}</div>  
-            <div dangerouslySetInnerHTML={{ __html: board.boardContent }}></div>   
-            
+            <div>
+                <label htmlFor="">제목:</label>
+                {board.boardTitle}
+                </div> 
+            <div>
+                <label htmlFor="">내용:</label>
+                <div dangerouslySetInnerHTML={{ __html: board.boardContent }}></div>  
+                <div>
+                   {fileList.map((v) => <img style={{width:'100px', height:'150px'}} src={v.filePath}/>)} 
+                </div> 
+            <div>
+                </div>
+           
+            </div>
               <Link href={`/edit/${id}`} >
                   <MyButton text={'수정'} type={'positive'} data={board}/>
               </Link>
@@ -75,7 +103,9 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
   if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
     }
-
+    store.dispatch({
+        type: LOAD_USER_REQUEST
+     }); 
 
 
   store.dispatch(END);

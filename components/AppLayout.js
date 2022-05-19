@@ -5,27 +5,20 @@ import styled from 'styled-components'
 import { Menu, Input, Row, Col } from  'antd'
 import { createGlobalStyle } from 'styled-components';
 import Router, { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LoginForm from './LoginForm';
 import UserForm from './UserForm'
-const Global = createGlobalStyle`
-.ant_row{
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-}
-.ant_col:first-child{
-  padding-left: 0 !important;
-}
 
-.ant-col:last-child{
-  padding-right: 0 !important;
-}
-`
+
+
 const Logo = styled.div`
   margin:10px`
 
 const AppLayout =({children}) =>{ 
 
+ 
+    const {user} = useSelector((state) => state.user)
+    console.log(user)
     const items = [
          { label: <Link href="/notice"><a>공지사항</a></Link>,
          key: '/notice', },
@@ -35,14 +28,9 @@ const AppLayout =({children}) =>{
         
       ];
 
-    const router = useRouter();
 
-    const {userInfo} = useSelector((state) => state.user)
-      if(userInfo){
-        console.log({userInfo})
-        localStorage.setItem('user', JSON.stringify(userInfo))
-        console.log(localStorage.getItem('user'))
-      }
+
+  
       return (
     
         <div> 
@@ -58,6 +46,7 @@ const AppLayout =({children}) =>{
             </div>
             <Row gutter={8}>
                 <Col xs={24} md={4}>
+                  {user ? <UserForm/> :<LoginForm />}
                 </Col>
                 <Col xs={24} md={16}>
                 {children}
@@ -76,4 +65,4 @@ AppLayout.prototype ={
     children: PropTypes.node.isRequired
 }
 
-export default AppLayout;;
+export default AppLayout;

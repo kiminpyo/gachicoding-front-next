@@ -10,7 +10,7 @@ const BoardList = ({data}) =>{
    
 
 return(
-    <div style={{display:'flex', justifyContent: 'space-around'}}>
+    <div key={data.boardIdx} style={{display:'flex', justifyContent: 'space-around'}}>
      
        <Link
        href={`/detail/${data.boardIdx}`}>
@@ -28,7 +28,7 @@ return(
   )
 }
 BoardList.propTypes ={
-    data: PropTypes.array.isRequired
+    data: PropTypes.object.isRequired
 }
 
 export default BoardList;
