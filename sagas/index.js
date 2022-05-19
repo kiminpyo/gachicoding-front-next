@@ -8,7 +8,7 @@ import userSaga from './user'
 axios.defaults.baseURL = 'http://localhost:8080/';
 axios.defaults.withCredentials  = true; 
 
-/* genarator */
+/* genarator생성 */
 
 
 export default function* rootSaga(){
