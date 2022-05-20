@@ -7,39 +7,90 @@ export const initialState = {
     notice: null,
     img:null,
     pageable: null,
-    qna: []
+    qna: [],
+   
     
 };
 
 export const generateDummyPost = (number) => Array(number).fill().map(() =>({
-        userIdx : shortId.generate(),
-        qnaList:{
+        /* 로그인 유저 정보 */
+        myIdx : shortId.generate(),
+        qnaList:[{
+            /* 질문자 정보 */
             userIdx : shortId.generate(),
+            /* 질문자의 질문정보 */
             questionIdx : shortId.generate(),
             questionTitle : faker.lorem.paragraph(),
             questionView : 0,
-            pageable:{
-
-            }
         },
+        {
+            /* 질문자 정보 */
+            userIdx : shortId.generate(),
+            /* 질문자의 질문정보 */
+            questionIdx : shortId.generate(),
+            questionTitle : faker.lorem.paragraph(),
+            questionView : 0,
+        }],
         qnaDetail:{
-            user: {
-                userIdx : shortId.generate(),
+                /* 로그인한 유저 */
+                myIdx : shortId.generate(),
                 username: faker.name.firstName(),
-            },
-            question:[{
+            question:{
+                /* 질문자 */
                 userIdx: shortId.generate(),
+                /* 질문번호 */
                 questionIdx: shortId.generate(),
                 questionTitle: faker.vehicle.model(),
                 questionContent : faker.lorem.paragraph(),
                 /* 코멘트는 따로요청 */
-                questionComment:[{
+                questionComment:{
+                    /* 내 정보*/
+                    myIdx: shortId.generate(),
+                    comments :[{
+                        /* 글쓴유저 */
+                        userIdx : shortId.generate(),
+                        /* 코멘트 번호 */
+                        commentIdx : shortId.generate(),
+                        commentContent: faker.lorem.paragraph(),
+                    },{
+                        
+                        userIdx : shortId.generate(),
+                        commentIdx : shortId.generate(),
+                        commentContent: faker.lorem.paragraph(),
+                    }]
+                }
+                ,
+                answer: {
+                    /* 질문번호 */
+                    questionIdx: shortId.generate(),
                     userIdx : shortId.generate(),
-                    commentIdx : shortId.generate(),
-                    commentContent: faker.lorem.paragraph(),
-                }],
-                answer: [
-                    {
+                   
+                    /* 답변리스트 */
+                    answerList: [{
+                        /* 로그인한 유저 */
+                        myIdx : shortId.generate(),
+                        /* 답변 글 */
+                        answerIdx : shortId.generate(),
+                        answerTitle: faker.vehicle.model(),
+                        answerContent : faker.lorem.paragraph(),
+                        answerCommentList:{
+                            /* 유저 */
+                            myIdx : shortId.generate(),
+                            comments:[{
+                                /* 코멘트를 쓴 사용자 */
+                                userIdx : shortId.generate(),
+                                /* 코멘트 번호 */
+                                commentIdx : shortId.generate(),
+                                commentContent: faker.lorem.paragraph()
+                            },{
+                                userIdx : shortId.generate(),
+                                commentIdx : shortId.generate(),
+                                commentContent: faker.lorem.paragraph()
+                            }]
+                        }
+                    },
+                    {   
+                        userIdx : shortId.generate(),
                         answerIdx : shortId.generate(),
                         answerTitle: faker.vehicle.model(),
                         answerContent : faker.lorem.paragraph(),
@@ -47,23 +98,49 @@ export const generateDummyPost = (number) => Array(number).fill().map(() =>({
                             userIdx : shortId.generate(),
                             commentIdx : shortId.generate(),
                             commentContent: faker.lorem.paragraph()
-                        }]
-                    },
-                    {
-                        answerIdx : shortId.generate(),
-                        answerTitle: faker.vehicle.model(),
-                        answerContent : faker.lorem.paragraph(),
-                        answerComment:[{
+                        },{
                             userIdx : shortId.generate(),
                             commentIdx : shortId.generate(),
                             commentContent: faker.lorem.paragraph()
-                        }]
-                    },
-                ]
-            }],            
+                        }
+                        ]
+                    }],
+                }
+            },            
         }
 
 }));
+
+export const addQnaQuestion = (data) =>({
+    /* qna를 보낸 유저 id */
+    userIdx: data.userIdx,
+    qnaIdx: data.qnaIdx,
+    qnaDetail:{
+        title:data.title,
+        content: data.content
+    },
+    answer: [],
+    comments: [],
+})
+export const addQnaAnswer = (data) =>({
+    questionIdx: data.id,
+    answerId: shortId.generate(),
+    title: data.title,
+    content: data.content,
+    comments: [],
+})
+
+export const addQnaComment = (data) =>({
+    /* comment id */
+    Commentid: data.id,
+    title: data.title,
+    content: data.content,
+    user: {
+        id: 1,
+    }
+})
+
+
 
 export const qnaDetail =(data) =>{
     return {
@@ -109,11 +186,53 @@ export const QNA_DETAIL_REQUEST = "QNA_DETAIL_REQUEST";
 export const QNA_DETAIL_SUCCESS = "QNA_DETAIL_SUCCESS";
 export const QNA_DETAIL_FAILURE = "QNA_DETAIL_FAILURE";
 
+export const QNA_CREATE_REQUEST = "QNA_CREATE_REQUEST";
+export const QNA_CREATE_SUCCESS = "QNA_CREATE_SUCCESS";
+export const QNA_CREATE_FAILURE = "QNA_CREATE_FAILURE";
+
+export const ADD_ANSWER_REQUEST = "ADD_ANSWER_REQUEST";
+export const ADD_ANSWER_SUCCESS = "ADD_ANSWER_SUCCESS";
+export const ADD_ANSWER_FAILURE = "ADD_ANSWER_FAILURE";
 
 
 const reducer = (state = initialState, action)=>{
     return produce(state ,(draft) => {
         switch(action.type){
+                case ADD_ANSWER_REQUEST: 
+                    console.log('답변진입')
+                    console.log(action.data)
+                break;
+                case ADD_ANSWER_SUCCESS:
+                    console.log('답변성공')
+                    console.log(action.data)
+               draft.qna  =  draft.qna.filter((v) => v.qnaIdx === action.data.questionIdx)
+                   /*  draft.qna = draft.qna.filter((v) => v.qnaIdx === action.data.questionIdx) */
+                draft.qna[0].answer.unshift(action.data)
+                    break;
+                case ADD_ANSWER_FAILURE:
+                    console.log('답변실패')
+                    
+                    break;
+                case QNA_DETAIL_REQUEST: 
+                    console.log('qna 등록 진입')
+            
+                break;
+                case QNA_CREATE_REQUEST: 
+                    console.log('qna 작성 진입')
+                    console.log(action.data)
+                break;
+                case QNA_CREATE_SUCCESS:
+                    console.log('qna 작성 성공')
+                    draft.qna.unshift(addQnaQuestion(action.data))
+                    break;
+                case QNA_CREATE_FAILURE:
+                    console.log('qna 작성 실패')
+                    
+                    break;
+                case QNA_DETAIL_REQUEST: 
+                    console.log('qna 등록 진입')
+            
+                break;
                 case QNA_DETAIL_REQUEST: 
                     console.log('qna 상세 진입')
                     console.log(action.data)
@@ -130,11 +249,11 @@ const reducer = (state = initialState, action)=>{
                 break;
                 case QNA_DETAIL_REQUEST: 
                     console.log('qna 등록 진입')
-            
+                 
                 break;
                 case QNAS_SUCCESS:
                     console.log('qna 등록 성공')
-                    draft.qna = action.data.concat(draft.qna)
+                   
                     break;
                 case QNAS_FAILURE:
                     console.log('qna 등록 실패')
