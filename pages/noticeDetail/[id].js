@@ -7,28 +7,28 @@ import { useRouter } from 'next/router';
 
 
 import AppLayout from '../../components/AppLayout';
-import { BOARDS_DETAIL_REQUEST, BOARDS_REQUEST, BOARD_DELETE_REQUEST, BOARD_EDIT_REQUEST, NOTICELIST_REQUEST } from '../../reducers/post';
+import { BOARDS_DETAIL_REQUEST, BOARDS_REQUEST, BOARD_DELETE_REQUEST, BOARD_EDIT_REQUEST, NOTICELIST_REQUEST, NOTICE_DETAIL_REQUEST } from '../../reducers/post';
 import BoardEditor from '../../components/BoardEditor';
 import Link from 'next/link';
 import MyButton from '../../components/MyButton';
 import { LOAD_USER_REQUEST } from '../../reducers/user';
-const detail = () => {
+const noticeDetail = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     /* 게시판 번호불러오기 */
     const { id } = router.query;
-    const {board}  = useSelector((state) => state.post);
+    const {notice}  = useSelector((state) => state.post);
    
 
     useEffect(()=>{
         dispatch({
-            type: BOARDS_DETAIL_REQUEST,
+            type: NOTICE_DETAIL_REQUEST,
             data: id
         })
         
     },[id])
 
-     const onDeleteBoard = useCallback(()=>{
+     const onDeleteNotice = useCallback(()=>{
         
         const result = confirm('삭제하시겠습니까?')
         if(result){
@@ -46,17 +46,17 @@ const detail = () => {
 
  
 
-    if(JSON.stringify(board.fileList)){
+   
         /* arr */
     
-        console.log(board.fileList)
+       /*  console.log(board.fileList)
         console.log(JSON.stringify(board.fileList))
         console.log(typeof JSON.parse(JSON.stringify(board.fileList)))
         const fileListobj =JSON.parse(JSON.stringify(board.fileList));
         console.log(Object.keys(fileListobj))
         console.log(Object.values(fileListobj))
         const fileList = Object.values(fileListobj);
-        fileList.map(v=> console.log(v))
+        fileList.map(v=> console.log(v)) */
 
        
    
@@ -65,31 +65,27 @@ const detail = () => {
     
        
         return <AppLayout>
-            <div>
+          
+           <div>
                 <label htmlFor="">제목:</label>
-                {board.boardTitle}
+                {notice && notice.notTitle}
                 </div> 
             <div>
                 <label htmlFor="">내용:</label>
-                <div dangerouslySetInnerHTML={{ __html: board.boardContent }}></div>  
-                <div>
-                   {fileList.map((v) => <img style={{width:'100px', height:'150px'}} src={v.filePath}/>)} 
-                </div> 
+                <div dangerouslySetInnerHTML={ notice &&  {  __html: notice.notContent }}></div>  
+             
             <div>
                 </div>
            
             </div>
-              <Link href={`/edit/${id}`} >
-                  <MyButton text={'수정'} type={'positive'} data={board}/>
+              <Link href={`/noticeEdit/${id}`} >
+                  <MyButton text={'수정'} type={'positive'} data={notice}/>
               </Link>
-              <MyButton onClick={onDeleteBoard} text={'삭제'} type={'negative'}></MyButton>
-       
+              <MyButton onClick={onDeleteNotice} text={'삭제'} type={'negative'}></MyButton>
+    
                  
         </AppLayout>
-    }else{
-        
-        return <div>hi</div>
-    }
+ 
  
   
 }
@@ -111,4 +107,4 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
   store.dispatch(END);
   await store.sagaTask.toPromise();
 })
-export default detail;
+export default noticeDetail;

@@ -162,6 +162,10 @@ export const IMAGE_PREVIEW_FAILURE = "IMAGE_PREVIEW_FAILURE";
 export const NOTICE_CREATE_REQUEST = "NOTICE_CREATE_REQUEST";
 export const NOTICE_CREATE_SUCCESS = "NOTICE_CREATE_SUCCESS";
 export const NOTICE_CREATE_FAILURE = "NOTICE_CREATE_FAILURE";
+
+export const NOTICE_DETAIL_REQUEST = "NOTICE_DETAIL_REQUEST";
+export const NOTICE_DETAIL_SUCCESS = "NOTICE_DETAIL_SUCCESS";
+export const NOTICE_DETAIL_FAILURE = "NOTICE_DETAIL_FAILURE";
  
 export const IMAGE_UPLOAD_REQUEST = "IMAGE_UPLOAD_REQUEST";
 export const IMAGE_UPLOAD_SUCCESS = "IMAGE_UPLOAD_SUCCESS";
@@ -231,6 +235,21 @@ const reducer = (state = initialState, action)=>{
                 console.log('답변성공')
                 console.log(action.data)
                
+                break;
+                case NOTICE_DETAIL_REQUEST: 
+                console.log('게시판 상세 진입')
+            
+                break;
+                case NOTICE_DETAIL_SUCCESS:
+                    console.log('게시판 상세 성공')
+                    console.log(action.data)
+                    draft.notice = action.data
+             
+                break;
+            
+                case NOTICE_DETAIL_FAILURE:
+                    console.log('게시판 상세 실패')
+                    
                 break;
                 case NOTICE_CREATE_FAILURE:
                 

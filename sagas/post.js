@@ -4,7 +4,7 @@ import { BOARDS_REQUEST ,BOARDS_SUCCESS, BOARDS_FAILURE, NOTICELIST_REQUEST, NOT
       BOARD_CREATE_SUCCESS, BOARD_CREATE_FAILURE, BOARD_DELETE_SUCCESS, BOARD_DELETE_FAILURE, 
       BOARD_DELETE_REQUEST, IMAGE_UPLOAD_REQUEST, IMAGE_UPLOAD_SUCCESS, IMAGE_UPLOAD_FAILURE, 
       BOARDS_PAGING_REQUEST, BOARDS_PAGING_SUCCESS, BOARDS_DETAIL_FAILURE, BOARDS_DETAIL_SUCCESS, 
-      BOARDS_DETAIL_REQUEST, QNAS_REQUEST, QNAS_SUCCESS, generateDummyPost, QNAS_FAILURE, QNA_DETAIL_REQUEST, QNA_DETAIL_SUCCESS, QNA_DETAIL_FAILURE, QNA_CREATE_REQUEST, QNA_CREATE_SUCCESS, QNA_CREATE_FAILURE, ADD_ANSWER_REQUEST, ADD_ANSWER_SUCCESS, ADD_ANSWER_FAILURE, NOTICE_CREATE_REQUEST, NOTICE_CREATE_SUCCESS, NOTICE_CREATE_FAILURE} from '../reducers/post'
+      BOARDS_DETAIL_REQUEST, QNAS_REQUEST, QNAS_SUCCESS, generateDummyPost, QNAS_FAILURE, QNA_DETAIL_REQUEST, QNA_DETAIL_SUCCESS, QNA_DETAIL_FAILURE, QNA_CREATE_REQUEST, QNA_CREATE_SUCCESS, QNA_CREATE_FAILURE, ADD_ANSWER_REQUEST, ADD_ANSWER_SUCCESS, ADD_ANSWER_FAILURE, NOTICE_CREATE_REQUEST, NOTICE_CREATE_SUCCESS, NOTICE_CREATE_FAILURE, NOTICE_DETAIL_REQUEST, NOTICE_DETAIL_SUCCESS, NOTICE_DETAIL_FAILURE} from '../reducers/post'
 import axios from 'axios';
 import shortId from 'shortid';
 
@@ -94,6 +94,27 @@ function* loadNoticeList(action){
    
         yield put({
             type: NOTICELIST_FAILURE,
+                
+        })
+    }
+}
+function noticeDetailAPI(data){
+    return axios.get(`api/notice/${data}`)
+}
+
+function* noticeDetail(action){
+    console.log(action.data)
+    try{
+        const result = yield call(noticeDetailAPI, action.data)
+        console.log(result)
+     yield put({
+         type: NOTICE_DETAIL_SUCCESS,
+         data: result.data
+     })
+    }catch(err) {
+   
+        yield put({
+            type: NOTICE_DETAIL_FAILURE,
                 
         })
     }
@@ -324,6 +345,9 @@ function* watchLoadBoards(){
 function* watchLoadNoticeList(){
     yield takeLatest(NOTICELIST_REQUEST, loadNoticeList)
 }
+function* watchLoadNoticeDetail(){
+    yield takeLatest(NOTICE_DETAIL_REQUEST, noticeDetail)
+}
 function* watchUploadImage(){
     yield takeLatest(IMAGE_UPLOAD_REQUEST, uploadImage)
 }
@@ -351,12 +375,13 @@ export default function* postSage(){
         fork(watchPostBoard),
         fork(watchEditBoard),
         fork(watchLoadBoards),
-        fork(watchLoadNoticeList),
         fork(watchDeleteBoard),
         fork(watchQnaList),
         fork(watchQnaDetail),
         fork(watchQnaCreate),
         fork(watchQnaAnswer),
+        fork(watchLoadNoticeList),
+        fork(watchLoadNoticeDetail),
         fork(watchNOticeCreate)
     ])
 }

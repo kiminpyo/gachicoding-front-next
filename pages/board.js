@@ -7,12 +7,12 @@ import Link from 'next/link';
 import AppLayout from "../components/AppLayout";
 import BoardList from "../components/BoardList";
 import { BOARDS_PAGING_REQUEST, BOARDS_REQUEST, NOTICELIST_REQUEST } from '../reducers/post';
-import { Button, Pagination } from 'antd';
+import { Button, Pagination,  Input, Select,} from 'antd';
 import { LOAD_USER_REQUEST } from '../reducers/user';
 import MyButton from '../components/MyButton';
 import useInput from '../hooks/useInput';
 import Router from 'next/router'
-import { Input, Select, } from 'antd';
+
 const Board = () =>{
 
     const dispatch = useDispatch();

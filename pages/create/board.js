@@ -13,6 +13,8 @@ const CreateBoard = () =>{
     const [text, onChangeCotentHandler] = useInput('')
     const dispatch = useDispatch();
     const {img} = useSelector((state) => state.post);
+    const {user} = useSelector((state) => state.user);
+    console.log(user)
     console.log(img);
     const onSubmitForm = useCallback(() => {
 

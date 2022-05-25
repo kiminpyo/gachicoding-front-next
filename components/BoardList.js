@@ -13,7 +13,7 @@ return(
     <div key={data.boardIdx} style={{display:'flex', justifyContent: 'space-around'}}>
      
        <Link
-       href={`/detail/${data.boardIdx}`}>
+       href={`/boardDetail/${data.boardIdx}`}>
         <div 
        style ={{width:'60%'}}>
            #노트

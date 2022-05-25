@@ -5,19 +5,16 @@ import 'antd/dist/antd.css';
 import wrapper from '../store/configureStore';
 import '../components/css/button.css'
 import 'react-quill/dist/quill.snow.css';
-function gachicoding({ Component }) {
+const Gachicoding =({ Component }) => {
   return (
     <>
-      <Head>
-        <meta charSet="utf-8" />
-        <title>gachicoding</title>
-      </Head>
+   
       <Component />
     </>
   );
 }
 
-gachicoding.propTypes = {
+Gachicoding.propTypes = {
   Component: PropTypes.elementType.isRequired,
 };
 
@@ -25,4 +22,4 @@ export function reportWebVitals(metric) {
   console.log(metric);
 }
 
-export default wrapper.withRedux(gachicoding);
+export default wrapper.withRedux(Gachicoding);

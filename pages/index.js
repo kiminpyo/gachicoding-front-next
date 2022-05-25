@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {memo, useEffect} from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import {END} from 'redux-saga';
 import wrapper from '../store/configureStore';
@@ -13,7 +13,9 @@ const Home = () =>{
 
      return(
             <AppLayout>
-                
+                <div> 영준님 인생의 낭비를 하고있진 않으신가요? 
+                    <br />가치코딩과 함께라면 낭비가 없습니다!
+                </div>
         </AppLayout>
             
         )

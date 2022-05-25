@@ -8,17 +8,16 @@ import Router, { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import LoginForm from './LoginForm';
 import UserForm from './UserForm'
+import React from 'react';
 
 
 
 const Logo = styled.div`
   margin:10px`
 
-const AppLayout =({children}) =>{ 
+const AppLayout = ({children}) =>{ 
 
- 
     const {user} = useSelector((state) => state.user)
-    console.log(user)
     const items = [
          { label: <Link href="/notice"><a>공지사항</a></Link>,
          key: '/notice', },
@@ -35,10 +34,10 @@ const AppLayout =({children}) =>{
     
         <div> 
             <Logo>
-                <h3>gachicoding</h3>
+                <h3><Link href="/">Gachicoding</Link></h3>
             </Logo>
             <div 
-            style={{}}>
+            >
             <Menu 
             mode = "horizontal"
             items={items} />
@@ -46,7 +45,7 @@ const AppLayout =({children}) =>{
             </div>
             <Row gutter={8}>
                 <Col xs={24} md={4}>
-                  {user ? <UserForm/> :<LoginForm />}
+                  {user && user ? <UserForm/> :<LoginForm />}
                 </Col>
                 <Col xs={24} md={16}>
                 {children}
