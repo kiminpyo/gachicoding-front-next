@@ -19,7 +19,7 @@ const CreateBoard = () =>{
         if(!text || !text.trim()){
             return alert('게시글을 작성하세요')
         }
-        console.log(img)
+
             dispatch({
                     type: BOARD_CREATE_REQUEST,
                     data: {          
@@ -38,6 +38,7 @@ const CreateBoard = () =>{
 
         const onClickImageUpload = useCallback(() =>{
             imgInput.current.click();
+            
         },[imgInput.current])
 
         const onChangeImages =useCallback((e) =>{
@@ -50,11 +51,13 @@ const CreateBoard = () =>{
                 type: IMAGE_UPLOAD_REQUEST,
                 data: imageFormData
                 })    
+                
+                console.log(imageFormData)
             },[])
 
            
       
-           
+         
         
 
     return (
@@ -71,7 +74,7 @@ const CreateBoard = () =>{
             <input type="url" name="" id="" />
 
             <label htmlFor="">내용:</label>
-            <textarea name="" id="" cols="30" rows="10" value={text} onChange={onChangeCotentHandler}>  
+            <textarea name="content" id="" cols="30" rows="10" value={text} onChange={onChangeCotentHandler}>  
             </textarea>
             <div style={{textAlign:'center', paddingTop:'30px'}}><h2>미리보기</h2></div>
             <div style={{display:'flex', padding:'30px', width:'100%'}}> 
@@ -82,12 +85,13 @@ const CreateBoard = () =>{
         <Button type="primary" htmlType="submit">글쓰기</Button>
         </Form>
         <form action="post"
-        enctype="multipart/form-data" >
+        encType="multipart/form-data" >
         <input
             type= "file"
             name="files" 
             multiple 
             hidden 
+            
             accept="image/*"
             ref={imgInput}
             onChange={onChangeImages} />

@@ -5,7 +5,7 @@ import shortId from 'shortid';
 export const initialState = {
     board: [],
     notice: null,
-    img:null,
+    img:[],
     pageable: null,
     qna: [],
    
@@ -139,7 +139,13 @@ export const addQnaComment = (data) =>({
         id: 1,
     }
 })
-
+export const imageUpload=(data) =>{
+    console.log(data)
+    return {
+        type: IMAGE_PREVIEW_REQUEST,
+        data
+    }
+}
 
 
 export const qnaDetail =(data) =>{
@@ -148,7 +154,14 @@ export const qnaDetail =(data) =>{
         data
     }
 }
-    
+
+export const IMAGE_PREVIEW_REQUEST = "IMAGE_PREVIEW_REQUEST";
+export const IMAGE_PREVIEW_SUCCESS = "IMAGE_PREVIEW_SUCCESS";
+export const IMAGE_PREVIEW_FAILURE = "IMAGE_PREVIEW_FAILURE";
+
+export const NOTICE_CREATE_REQUEST = "NOTICE_CREATE_REQUEST";
+export const NOTICE_CREATE_SUCCESS = "NOTICE_CREATE_SUCCESS";
+export const NOTICE_CREATE_FAILURE = "NOTICE_CREATE_FAILURE";
  
 export const IMAGE_UPLOAD_REQUEST = "IMAGE_UPLOAD_REQUEST";
 export const IMAGE_UPLOAD_SUCCESS = "IMAGE_UPLOAD_SUCCESS";
@@ -198,6 +211,30 @@ export const ADD_ANSWER_FAILURE = "ADD_ANSWER_FAILURE";
 const reducer = (state = initialState, action)=>{
     return produce(state ,(draft) => {
         switch(action.type){
+                case IMAGE_PREVIEW_REQUEST: 
+                console.log('답변진입')
+                draft.img.push(action.data)
+                break;
+                case IMAGE_PREVIEW_SUCCESS:
+                console.log('답변성공')
+                console.log(action.data)
+            
+                break;
+                case IMAGE_PREVIEW_FAILURE:
+                
+                break;
+                case NOTICE_CREATE_REQUEST: 
+                console.log('답변진입')
+             
+                break;
+                case NOTICE_CREATE_SUCCESS:
+                console.log('답변성공')
+                console.log(action.data)
+               
+                break;
+                case NOTICE_CREATE_FAILURE:
+                
+                break;
                 case ADD_ANSWER_REQUEST: 
                     console.log('답변진입')
                     console.log(action.data)
@@ -263,10 +300,13 @@ const reducer = (state = initialState, action)=>{
                     console.log('이미지 등록 진입')
             
                 break;
+                case IMAGE_UPLOAD_REQUEST:
+                    console.log('이미지 등록 진입')
+                    break;
                 case IMAGE_UPLOAD_SUCCESS:
                     console.log('이미지 등록 성공')
-                    console.log(action.data)
                     draft.img = action.data
+                  
                     break;
                 case IMAGE_UPLOAD_FAILURE:
                     console.log('이미지 등록 실패')

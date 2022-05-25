@@ -4,6 +4,7 @@ import Head from 'next/head';
 import 'antd/dist/antd.css'; 
 import wrapper from '../store/configureStore';
 import '../components/css/button.css'
+import 'react-quill/dist/quill.snow.css';
 function gachicoding({ Component }) {
   return (
     <>
