@@ -22,7 +22,7 @@ function* logIn(action){
     }catch(err){
         yield put({
             type: LOG_IN_FAILURE,
-            err: err.response.data
+    /*         err: err.response.data */
         })
     }
 }

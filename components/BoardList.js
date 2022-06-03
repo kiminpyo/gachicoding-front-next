@@ -8,7 +8,7 @@ const BoardList = ({data}) =>{
   
 
    
-
+  
 return(
     <div key={data.boardIdx} style={{display:'flex', justifyContent: 'space-around'}}>
      

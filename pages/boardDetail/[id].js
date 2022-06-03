@@ -46,17 +46,17 @@ const boardDetail = () => {
 
  
 
-    if(JSON.stringify(board.fileList)){
+/*     if(JSON.stringify(board.fileList)){ */
         /* arr */
     
-        console.log(board.fileList)
+      /*   console.log(board.fileList)
         console.log(JSON.stringify(board.fileList))
         console.log(typeof JSON.parse(JSON.stringify(board.fileList)))
         const fileListobj =JSON.parse(JSON.stringify(board.fileList));
         console.log(Object.keys(fileListobj))
         console.log(Object.values(fileListobj))
         const fileList = Object.values(fileListobj);
-        fileList.map(v=> console.log(v))
+        fileList.map(v=> console.log(v)) */
 
        
    
@@ -65,7 +65,7 @@ const boardDetail = () => {
     
        
         return <AppLayout>
-            <div>
+       {/*      <div>
                 <label htmlFor="">제목:</label>
                 {board.boardTitle}
                 </div> 
@@ -78,19 +78,20 @@ const boardDetail = () => {
             <div>
                 </div>
            
-            </div>
+            </div>*/}
+            
               <Link href={`/edit/${id}`} >
-                  <MyButton text={'수정'} type={'positive'} data={board}/>
-              </Link>
+                  <MyButton text={'수정'} type={'positive'} />
+              </Link>  
               <MyButton onClick={onDeleteBoard} text={'삭제'} type={'negative'}></MyButton>
        
-                 
+                
         </AppLayout>
-    }else{
+ /*    }else{
         
         return <div>hi</div>
     }
- 
+  */
   
 }
 /* context안에 store가 들어있다. */

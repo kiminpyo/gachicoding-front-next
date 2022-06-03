@@ -4,7 +4,7 @@ import {END} from 'redux-saga';
 import wrapper from '../store/configureStore';
 import axios from 'axios'
 import Link from 'next/link';
-import { Button, Pagination,  Input, Select,} from 'antd';
+import { Button, Pagination,  Input, Select, Option} from 'antd';
 import NoticeList from '../components/NoticeList';
 import AppLayout from '../components/AppLayout';
 import { NOTICELIST_REQUEST } from '../reducers/post';
@@ -13,6 +13,7 @@ import MyButton from '../components/MyButton';
 import Router from 'next/router'
 import useInput from '../hooks/useInput';
 
+
 const Notice = () => {
 
   const [searchInput, onChangeSearchInput] = useInput('');
@@ -20,33 +21,25 @@ const Notice = () => {
   const dispatch = useDispatch();
   const {notice}  = useSelector((state) => state.post)
 
-  console.log(notice)
-  
+
   const selectBefore = (
     <Select defaultValue="제목" className="select-before">
       <Option value="제목">제목</Option>
       <Option value="해시태그">해시태그</Option>
     </Select>
   );
+ 
     const onChange = useCallback((pageNumber) => {
               
       dispatch({
           type: NOTICELIST_REQUEST,
-          data: pageNumber
-
-          
+          data: pageNumber      
       })
-
-      
-
   },[notice]) 
-    const onSearch = useCallback(() =>{
-            
+    const onSearch = useCallback(() =>{       
       /*  동적라우팅 => 알아서 주소로 가서 서버사이드 렌더링 (getsersideprops실행)*/
       Router.push(`/notice/${searchInput}`)
     },[searchInput])
-
-
     return (
       <AppLayout>
      {notice && notice.map((data) => <NoticeList key={data.notIdx} data={data}/>)}
@@ -69,11 +62,6 @@ const Notice = () => {
             </Link>
             </div>
             </div>
-          
-            
-            
-
-
       </AppLayout>
   
     )
@@ -89,14 +77,14 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
   if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
     }
-  store.dispatch({
-      type: NOTICELIST_REQUEST
-   });
- 
- store.dispatch({
-  type:LOAD_USER_REQUEST
-}); 
-  store.dispatch(END);
+      store.dispatch({
+        type: NOTICELIST_REQUEST
+    });
+     store.dispatch({
+      type:LOAD_USER_REQUEST
+    }); 
+    store.dispatch(END);
   await store.sagaTask.toPromise();
+  
 })
 export default Notice;

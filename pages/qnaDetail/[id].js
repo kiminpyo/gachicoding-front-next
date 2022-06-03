@@ -1,89 +1,156 @@
-import React, {useEffect, useCallback, useState} from 'react'
+import React, {useEffect, useCallback, useState, useMemo} from 'react'
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import AppLayout from '../../components/AppLayout';
-import { ADD_ANSWER_REQUEST, QNA_DETAIL_REQUEST } from '../../reducers/post';
+import { ADD_ANSWER_REQUEST, ANSWER_DETAIL_REQUEST, QNA_DETAIL_REQUEST } from '../../reducers/post';
 import userSage from '../../sagas/user';
 import {Button, Form} from 'antd'
 import useInput from '../../hooks/useInput';
+import QuestionContent from '../../components/QuestionContent';
+import AnswerContent from '../../components/AnswerContent';
+import { Space,BackTop  } from 'antd'
+import {END} from 'redux-saga';
+import wrapper from '../../store/configureStore';
+import axios from 'axios'
+import { LOAD_USER_REQUEST } from '../../reducers/user';
+import CommentForm from '../../components/CommentForm';
+
  const QnaDetail = () =>{
     const dispatch = useDispatch();
     const router = useRouter();
     const {id} = router.query;
-    const {qna} = useSelector((state) => state.post)
-   console.log(qna)
-    console.log(id)
+    const {qnaDetail} =useSelector((state) =>state.post)
+    const answerList =useSelector((state) => state.post.qnaDetail?.answerList)
+    const {user}  =useSelector((state) =>state.user)
+  
     const [answer , setAnswer] = useState(!answer);
-    const [commentAnswer, onChangeCommentAnswer] = useInput('')
-    const [commentTitle, onChangeCommentTitle] = useInput('')
-    if(qna){
-      const findContent =  qna.filter((v) => v.qnaIdx === id);
-    const detail = findContent.map((v) => v.qnaDetail);
-    console.log(detail)
-       const title = detail.map((v) => v.title);
-       const content = detail.map((v) => v.content)
-        console.log(title)
-    const answerList= findContent.map((v) =>v.answer )
-    console.log(answerList[0])
-    const onClickAnswer =() =>{
-        setAnswer(!answer)
+    const [commentAnswer, setCommentAnswer] = useState('');
     
+    const onChangeCommentAnswer = (e) =>{
+        setCommentAnswer(e.currentTarget.value)
+ 
     }
     
-    const onSubmit =() =>{
-        console.log({commentAnswer,commentTitle, id })
+
+
+    useEffect(() =>{
+
         dispatch({
-            type: ADD_ANSWER_REQUEST,
-            data: {
-                content :commentAnswer, 
-                title: commentTitle,
-                id
-            }
-     
+            type: QNA_DETAIL_REQUEST,
+            data: id
         })
+       
+    
+    },[])
+    
+    const onClickAnswer =() =>{
+    
         setAnswer(!answer)
+        
+    
+    }
+        /* 답변 */
+    const onSubmit = () =>{
+        /* 글자가 없을 때 */
+        if(commentAnswer.trim() === ""){
+            return alert('내용을 입력하세요')
+        }
+        /* 질문자가 답변할 때 */
+        if(user.userEmail === qnaDetail.userEmail){
+            return alert('질문자는 답변할 수 없습니다.')
+        }
+            /* 답변하기 버튼을 누를 때 */
+        const confirmAnswer = confirm('등록하시겠습니까?')
+            /* 답변 전송 */
+        if(confirmAnswer){
+            console.log(commentAnswer)
+            dispatch({
+                type: ADD_ANSWER_REQUEST,
+                data: {
+                    ansContent:commentAnswer, 
+                    queIdx: id,
+                    userEmail: user.userEmail
+            
+                }
+        
+            })
+            /* 답변 창을 닫기 + 답변내용 지우기 */
+            console.log('hi')
+            setAnswer(!answer)
+            setCommentAnswer('')
+            /* 게시글 다시 request */
+            dispatch({
+                type: QNA_DETAIL_REQUEST,
+                data: id
+            })
+     
+       
+        }else{
+            return;
+        }
+
     }
         return (
-            <AppLayout>
-                {findContent.map((v) => <div key={v.qnaIdx}>{v.qnaIdx}</div>)}
-                {detail.map((v) => <div>
-                    <div>{v.title}</div>
-                    <div>{v.content}</div>
-                </div> )}
+            <AppLayout 
+            >
+                {/* question부터 답변달기 글까지 width값 */}
+                <div style={{width:'80%', marginLeft:'10%'}}>
+                <QuestionContent key={qnaDetail.queIdx} data={qnaDetail} />
+          
+                <div style={{fontSize:'13px'}}>댓글달기</div>
+              {/*   <CommentForm/>   */}
 
-            <div>
+                <div>
                 
                 <Button value={answer} onClick={onClickAnswer}>답변하기</Button>
+                </div>
                 {!answer && 
                 <Form
-                onFinish={onSubmit}>
-                    <label htmlFor="">제목:</label>
-                    <input type="text" value ={commentTitle} onChange={onChangeCommentTitle}/>
-                    <textarea  
-                    cols="50" 
-                    rows="10"
+                onFinish={onSubmit}>   
+                    <input  
+                    type="text"
                     value={commentAnswer} 
                     onChange={onChangeCommentAnswer}
-                    placeholder='답변을 입력하세요'></textarea>
-                    <Button type="primary" htmlType="submit">답글달기</Button>
-                </Form>}
-                    
-            </div>
-            {answerList === null ? null: <div>{answerList[0].length}개의 답변이 달렸습니다.</div>}
+                    placeholder='답변을 입력하세요'/>
+                    <Button type="primary" htmlType="submit" value={answer}>답글달기</Button>
+                </Form>
+                }
+        
+        
             <br />
-        {answerList === null ?  null:  answerList[0].map((v) =>
-        <div>
-            <div>답변:</div>
-            <div>id: {v.userIdx}</div>
-            <div>제목:{v.title}</div>
-            <div>{v.content}</div>
-        </div>)} 
-
+            <div>
+                {answerList && answerList.length >=1 
+                ? answerList.length +"개의 답변이 달렸습니다" 
+                :"답변이 없습니다"}
+             </div>
+            {answerList && answerList.map((v) => <AnswerContent key={v.ansIdx} data={v} queSolve={qnaDetail.queSolve} />)} 
+            </div>
             </AppLayout>
         )
-    }
+    
 
 }
+export const getServerSideProps = wrapper.getServerSideProps((store)=> async({req}) => {
+   
+    const cookie = req ? req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    /* 쿠키가 있고, 서버에 요청을 할 때만 넣는다. (다른사람의 내 쿠키 공유 문제 제거. 굉장히 중요하다) */
+    if (req && cookie) {
+        axios.defaults.headers.Cookie = cookie;
+      }
+    
+        store.dispatch({
+            type: LOAD_USER_REQUEST
+         }); 
+    
+    
+   
+     
+ 
+    store.dispatch(END);
+    await store.sagaTask.toPromise();
+
+})
 
 
  

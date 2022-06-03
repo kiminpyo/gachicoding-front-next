@@ -1,18 +1,28 @@
 import {all, fork, take, call, put, takeEvery,takeLatest, delay} from 'redux-saga/effects'
-import { BOARDS_REQUEST ,BOARDS_SUCCESS, BOARDS_FAILURE, NOTICELIST_REQUEST, NOTICELIST_SUCCESS,
-     NOTICELIST_FAILURE, BOARD_EDIT_REQUEST, BOARD_EDIT_SUCCESS, BOARD_EDIT_FAILURE, BOARD_CREATE_REQUEST,
-      BOARD_CREATE_SUCCESS, BOARD_CREATE_FAILURE, BOARD_DELETE_SUCCESS, BOARD_DELETE_FAILURE, 
-      BOARD_DELETE_REQUEST, IMAGE_UPLOAD_REQUEST, IMAGE_UPLOAD_SUCCESS, IMAGE_UPLOAD_FAILURE, 
-      BOARDS_PAGING_REQUEST, BOARDS_PAGING_SUCCESS, BOARDS_DETAIL_FAILURE, BOARDS_DETAIL_SUCCESS, 
-      BOARDS_DETAIL_REQUEST, QNAS_REQUEST, QNAS_SUCCESS, generateDummyPost, QNAS_FAILURE, QNA_DETAIL_REQUEST, QNA_DETAIL_SUCCESS, QNA_DETAIL_FAILURE, QNA_CREATE_REQUEST, QNA_CREATE_SUCCESS, QNA_CREATE_FAILURE, ADD_ANSWER_REQUEST, ADD_ANSWER_SUCCESS, ADD_ANSWER_FAILURE, NOTICE_CREATE_REQUEST, NOTICE_CREATE_SUCCESS, NOTICE_CREATE_FAILURE, NOTICE_DETAIL_REQUEST, NOTICE_DETAIL_SUCCESS, NOTICE_DETAIL_FAILURE} from '../reducers/post'
+import { BOARDS_REQUEST ,BOARDS_SUCCESS, BOARDS_FAILURE, NOTICELIST_REQUEST,
+     NOTICELIST_SUCCESS,NOTICELIST_FAILURE, BOARD_EDIT_REQUEST, 
+     BOARD_EDIT_SUCCESS, BOARD_EDIT_FAILURE, BOARD_CREATE_REQUEST,
+      BOARD_CREATE_SUCCESS, BOARD_CREATE_FAILURE, BOARD_DELETE_SUCCESS,
+       BOARD_DELETE_FAILURE, BOARD_DELETE_REQUEST, IMAGE_UPLOAD_REQUEST, IMAGE_UPLOAD_SUCCESS, 
+      IMAGE_UPLOAD_FAILURE, BOARDS_DETAIL_FAILURE, 
+      BOARDS_DETAIL_SUCCESS, BOARDS_DETAIL_REQUEST, QNAS_REQUEST, QNAS_SUCCESS, 
+     QNAS_FAILURE,QNA_DETAIL_REQUEST, QNA_DETAIL_SUCCESS, QNA_DETAIL_FAILURE, 
+       QNA_CREATE_REQUEST, QNA_CREATE_SUCCESS, QNA_CREATE_FAILURE, 
+       ADD_ANSWER_REQUEST, ADD_ANSWER_SUCCESS, ADD_ANSWER_FAILURE,
+        NOTICE_CREATE_REQUEST, NOTICE_CREATE_SUCCESS, 
+        NOTICE_CREATE_FAILURE, NOTICE_DETAIL_REQUEST,
+         NOTICE_DETAIL_SUCCESS, NOTICE_DETAIL_FAILURE, ANSWER_DETAIL_REQUEST, ADD_COMMENT_REQUEST, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, CHOOSE_ANSWER_REQUEST, CHOOSE_ANSWER_SUCCESS, CHOOSE_ANSWER_FAILURE, SIGN_UP_CHECK_REQUEST, SIGN_UP_CHECK_SUCCESS, SIGN_UP_CHECK_FAILURE}
+         from '../reducers/post'
 import axios from 'axios';
 import shortId from 'shortid';
+
+
+
 
 function postBoardAPI(data){
     console.log(data)    
     return axios.post(`api/board`,data)
 }
-
 function* postBoard(action){
     try{
         
@@ -32,7 +42,7 @@ function* postBoard(action){
 }
 
 function editBoardAPI(data){
-    return axios.put(`api/board/modify/`,data)
+    return axios.put(`api/board/modify`,data)
 }
 
 function* editBoard(action){
@@ -44,7 +54,6 @@ function* editBoard(action){
          data: result.data
      })
     }catch(err) {
-   
         yield put({
             type: BOARD_EDIT_FAILURE,
                 
@@ -56,11 +65,9 @@ function* editBoard(action){
 function loadBoardsAPI(pageNumber){
     return axios.get(`api/board/list?page=${pageNumber-1}&size=10&sort=boardIdx,DESC`)
 }
-
 function* loadBoards(action){
-    
-    try{
-        
+
+    try{  
         const result = yield call(loadBoardsAPI, action.data)
         console.log(result.data.pageable)
      yield put({
@@ -78,7 +85,7 @@ function* loadBoards(action){
 }
 
 function loadNoticeListAPI(){
-    return axios.get(`api/notice/list/`)
+    return axios.get(`api/notice/list`)
 }
 
 function* loadNoticeList(action){
@@ -191,45 +198,40 @@ function* boardDetail(action){
         })
     }
 }
-
-function qnaListAPI(data){
-    return axios.get(`api/board/${data}`)
+function qnaListAPI(pageNumber){
+    return axios.get(`api/question/list?page=${pageNumber}&size=12`)
 }
-
 function* qnaList(action){
- 
-    try{
-       /*   const result = yield call(qnaListAPI, action.data) 
-        console.log(result) */
-        yield delay(1000);
+    try{  
+        const result = yield call(qnaListAPI, action.data)
+        console.log(result)
      yield put({
          type: QNAS_SUCCESS,
-         
-         
+         data: result.data
      })
     }catch(err) {
         console.error(err)
         yield put({
-            type: QNAS_FAILURE,
- /*            data: err.response.data, */
+            type: QNAS_FAILURE,      
         })
     }
+
 }
 
 function qnaDetailAPI(data){
-    return axios.get(`api/board/${data}`)
+    return axios.get(`api/question/${data}`) 
 }
 
 function* qnaDetail(action){
     
     try{
-        const id = 'bq3T9g4s86'
-       /*   const result = yield call(qnaDetailAPI, action.data) 
-        console.log(result) */
-        yield delay(1000);
+   
+      const result = yield call(qnaDetailAPI, action.data) 
+        console.log(result) 
+  
      yield put({
          type: QNA_DETAIL_SUCCESS,
-         data: id
+         data: result.data
      })
     }catch(err) {
         console.error(err)
@@ -241,25 +243,18 @@ function* qnaDetail(action){
 }
 
 function qnaCreateAPI(data){
-    return axios.get(`api/board/${data}`)
+    return axios.post(`api/question`,data) 
 }
 
 function* qnaCreate(action){
     
     try{
-        const userIdx = shortId.generate();
-        const qnaIdx = shortId.generate();
-       /*   const result = yield call(qnaCreateAPI, action.data) 
-        console.log(result) */
-        yield delay(1000);
+      
+      const result = yield call(qnaCreateAPI, action.data) 
+        console.log(result) 
      yield put({
          type: QNA_CREATE_SUCCESS,
-         data: {
-             userIdx,
-             qnaIdx,
-             title: action.data.title,
-             content: action.data.content
-         }
+         data: result.data
      })
     }catch(err) {
         console.error(err)
@@ -271,24 +266,19 @@ function* qnaCreate(action){
 }
 
 function qnaAnswerAPI(data){
-    return axios.get(`api/board/${data}`)
+     return axios.post(`api/answer`,data) 
 }
 
 function* qnaAnswer(action){
     
     try{
-        const userIdx = shortId.generate();
-       /*   const result = yield call(qnaAnswerAPI, action.data) 
-        console.log(result) */
-        yield delay(1000);
+   
+     const result = yield call(qnaAnswerAPI, action.data) 
+        console.log(result) 
+
      yield put({    
          type: ADD_ANSWER_SUCCESS,
-         data: {
-            userIdx,
-            title: action.data.title,
-            content: action.data.content,
-            questionIdx: action.data.id
-         }
+         data: result.data
        
      })
     }catch(err) {
@@ -298,6 +288,53 @@ function* qnaAnswer(action){
  /*            data: err.response.data, */
         })
     }
+}
+
+function answerDetailAPI(data){
+    return axios.get(`api/answer${data}`) 
+}
+
+function* answerDetail(action){
+   
+   try{
+  
+    const result = yield call(answerDetailAPI, action.data) 
+       console.log(result) 
+    yield put({    
+        type: ADD_ANSWER_SUCCESS,
+        data: result.data
+      
+    })
+   }catch(err) {
+       console.error(err)
+       yield put({
+           type: ADD_ANSWER_FAILURE
+/*            data: err.response.data, */
+       })
+   }
+}
+function chooseAnsAPI(data){
+    return axios.put(`api/answer/select`, data) 
+}
+
+function* chooseAns(action){
+   
+   try{
+  
+    const result = yield call(chooseAnsAPI, action.data) 
+       console.log(result) 
+    yield put({    
+        type: CHOOSE_ANSWER_SUCCESS,
+        data: result.data
+      
+    })
+   }catch(err) {
+       console.error(err)
+       yield put({
+           type: CHOOSE_ANSWER_FAILURE
+/*            data: err.response.data, */
+       })
+   }
 }
 
 function noticeCreateAPI(data){
@@ -326,6 +363,82 @@ function* noticeCreate(action){
         })
     }
 }
+function signupUserAPI(data){
+    console.log(data)
+    return axios.post(`/api/user/regist`,data)
+}
+
+function* signupUser(action){
+    
+    try{
+      
+       const result = yield call(signupUserAPI, action.data) 
+        console.log(result) 
+     yield put({    
+         type: SIGN_UP_SUCCESS,
+         data: result.data   
+       
+     })
+    }catch(err) {
+    
+        console.log(err)
+        console.error(err)
+        yield put({
+            type: SIGN_UP_FAILURE,
+    
+        })
+    }
+}
+function signupCheckAPI(data){
+    console.log(data)
+    return axios.get(`/api/user/regist/check-email?email=${data}`,data)
+}
+
+function* signupCheck(action){
+    
+    try{
+      
+       const result = yield call(signupCheckAPI, action.data) 
+        console.log(result) 
+     yield put({    
+         type: SIGN_UP_CHECK_SUCCESS,
+         data: result.data   
+       
+     })
+    }catch(err) {
+    
+        console.log(err)
+        console.error(err)
+        yield put({
+            type: SIGN_UP_CHECK_FAILURE,
+    
+        })
+    }
+}
+/* 나중에 addcomment자리 */
+/* function addCommentAPI(data){
+    return axios.get(`api/answer${ data}`) 
+}
+
+function* addComment(action){
+   
+   try{
+  
+    const result = yield call(addCommentAPI, action.data) 
+       console.log(result) 
+    yield put({    
+        type: ADD_ANSWER_SUCCESS,
+        data: result.data
+      
+    })
+   }catch(err) {
+       console.error(err)
+       yield put({
+           type: ADD_ANSWER_FAILURE
+
+       })
+   }
+} */
 function* watchLoadBoardDetail(){
     yield takeLatest(BOARDS_DETAIL_REQUEST, boardDetail)
 }
@@ -363,9 +476,25 @@ function* watchQnaCreate(){
 function* watchQnaAnswer(){
     yield takeLatest(ADD_ANSWER_REQUEST, qnaAnswer)
 }
-function* watchNOticeCreate(){
+function* watchNoticeCreate(){
     yield takeLatest(NOTICE_CREATE_REQUEST, noticeCreate)
 }
+function* watchAnswerDetail(){
+    yield takeLatest(ANSWER_DETAIL_REQUEST, answerDetail)
+}
+function* watchSignupUser(){
+    yield takeLatest(SIGN_UP_REQUEST, signupUser)
+}
+function* watchSignupCheck(){
+    yield takeLatest(SIGN_UP_CHECK_REQUEST, signupCheck)
+}
+/* function* watchAddComment(){
+    yield takeLatest(ADD_COMMENT_REQUEST, addComment)
+} */
+function* watchChooseAns(){
+    yield takeLatest(CHOOSE_ANSWER_REQUEST, chooseAns)
+}
+
 
 
 export default function* postSage(){
@@ -378,10 +507,15 @@ export default function* postSage(){
         fork(watchDeleteBoard),
         fork(watchQnaList),
         fork(watchQnaDetail),
+        fork(watchAnswerDetail),
         fork(watchQnaCreate),
         fork(watchQnaAnswer),
         fork(watchLoadNoticeList),
         fork(watchLoadNoticeDetail),
-        fork(watchNOticeCreate)
+        fork(watchNoticeCreate),
+        /* fork(watchAddComment) */
+        fork(watchSignupUser),
+        fork(watchChooseAns),
+        fork(watchSignupCheck)
     ])
 }

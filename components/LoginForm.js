@@ -26,7 +26,7 @@ const LoginForm = React.memo(() =>{
     
     },[email,password])
   
-
+    console.log('로그인폼')
     
 return(
     <div>

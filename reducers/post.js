@@ -3,157 +3,25 @@ import faker from 'faker';
 import shortId from 'shortid';
 
 export const initialState = {
-    board: [],
+    emailCheck: null,
+    board: null,
     notice: null,
-    img:[],
+    qna:[],
+    qnaList:[],
+    tags: null,
+    img: [],
     pageable: null,
-    qna: [],
-   
-    
+    qnaDetail: {
+        answerList: null,
+    },
+    signUpLoading: false, //로그아웃 시도중
+    signUpDone: false, 
+    signUpError: null, 
+  
 };
 
-export const generateDummyPost = (number) => Array(number).fill().map(() =>({
-        /* 로그인 유저 정보 */
-        myIdx : shortId.generate(),
-        qnaList:[{
-            /* 질문자 정보 */
-            userIdx : shortId.generate(),
-            /* 질문자의 질문정보 */
-            questionIdx : shortId.generate(),
-            questionTitle : faker.lorem.paragraph(),
-            questionView : 0,
-        },
-        {
-            /* 질문자 정보 */
-            userIdx : shortId.generate(),
-            /* 질문자의 질문정보 */
-            questionIdx : shortId.generate(),
-            questionTitle : faker.lorem.paragraph(),
-            questionView : 0,
-        }],
-        qnaDetail:{
-                /* 로그인한 유저 */
-                myIdx : shortId.generate(),
-                username: faker.name.firstName(),
-            question:{
-                /* 질문자 */
-                userIdx: shortId.generate(),
-                /* 질문번호 */
-                questionIdx: shortId.generate(),
-                questionTitle: faker.vehicle.model(),
-                questionContent : faker.lorem.paragraph(),
-                /* 코멘트는 따로요청 */
-                questionComment:{
-                    /* 내 정보*/
-                    myIdx: shortId.generate(),
-                    comments :[{
-                        /* 글쓴유저 */
-                        userIdx : shortId.generate(),
-                        /* 코멘트 번호 */
-                        commentIdx : shortId.generate(),
-                        commentContent: faker.lorem.paragraph(),
-                    },{
-                        
-                        userIdx : shortId.generate(),
-                        commentIdx : shortId.generate(),
-                        commentContent: faker.lorem.paragraph(),
-                    }]
-                }
-                ,
-                answer: {
-                    /* 질문번호 */
-                    questionIdx: shortId.generate(),
-                    userIdx : shortId.generate(),
-                   
-                    /* 답변리스트 */
-                    answerList: [{
-                        /* 로그인한 유저 */
-                        myIdx : shortId.generate(),
-                        /* 답변 글 */
-                        answerIdx : shortId.generate(),
-                        answerTitle: faker.vehicle.model(),
-                        answerContent : faker.lorem.paragraph(),
-                        answerCommentList:{
-                            /* 유저 */
-                            myIdx : shortId.generate(),
-                            comments:[{
-                                /* 코멘트를 쓴 사용자 */
-                                userIdx : shortId.generate(),
-                                /* 코멘트 번호 */
-                                commentIdx : shortId.generate(),
-                                commentContent: faker.lorem.paragraph()
-                            },{
-                                userIdx : shortId.generate(),
-                                commentIdx : shortId.generate(),
-                                commentContent: faker.lorem.paragraph()
-                            }]
-                        }
-                    },
-                    {   
-                        userIdx : shortId.generate(),
-                        answerIdx : shortId.generate(),
-                        answerTitle: faker.vehicle.model(),
-                        answerContent : faker.lorem.paragraph(),
-                        answerComment:[{
-                            userIdx : shortId.generate(),
-                            commentIdx : shortId.generate(),
-                            commentContent: faker.lorem.paragraph()
-                        },{
-                            userIdx : shortId.generate(),
-                            commentIdx : shortId.generate(),
-                            commentContent: faker.lorem.paragraph()
-                        }
-                        ]
-                    }],
-                }
-            },            
-        }
-
-}));
-
-export const addQnaQuestion = (data) =>({
-    /* qna를 보낸 유저 id */
-    userIdx: data.userIdx,
-    qnaIdx: data.qnaIdx,
-    qnaDetail:{
-        title:data.title,
-        content: data.content
-    },
-    answer: [],
-    comments: [],
-})
-export const addQnaAnswer = (data) =>({
-    questionIdx: data.id,
-    answerId: shortId.generate(),
-    title: data.title,
-    content: data.content,
-    comments: [],
-})
-
-export const addQnaComment = (data) =>({
-    /* comment id */
-    Commentid: data.id,
-    title: data.title,
-    content: data.content,
-    user: {
-        id: 1,
-    }
-})
-export const imageUpload=(data) =>{
-    console.log(data)
-    return {
-        type: IMAGE_PREVIEW_REQUEST,
-        data
-    }
-}
 
 
-export const qnaDetail =(data) =>{
-    return {
-        type: QNA_DETAIL_REQUEST,
-        data
-    }
-}
 
 export const IMAGE_PREVIEW_REQUEST = "IMAGE_PREVIEW_REQUEST";
 export const IMAGE_PREVIEW_SUCCESS = "IMAGE_PREVIEW_SUCCESS";
@@ -211,10 +79,70 @@ export const ADD_ANSWER_REQUEST = "ADD_ANSWER_REQUEST";
 export const ADD_ANSWER_SUCCESS = "ADD_ANSWER_SUCCESS";
 export const ADD_ANSWER_FAILURE = "ADD_ANSWER_FAILURE";
 
+export const CHOOSE_ANSWER_REQUEST = "CHOOSE_ANSWER_REQUEST";
+export const CHOOSE_ANSWER_SUCCESS = "CHOOSE_ANSWER_SUCCESS";
+export const CHOOSE_ANSWER_FAILURE = "CHOOSE_ANSWER_FAILURE";
+
+export const ANSWER_DETAIL_REQUEST = "ANSWER_DETAIL_REQUEST";
+export const ANSWER_DETAIL_SUCCESS = "ANSWER_DETAIL_SUCCESS";
+export const ANSWER_DETAIL_FAILURE = "ANSWER_DETAIL_FAILURE";
+
+export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
+export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
+export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
+
+export const SIGN_UP_REQUEST = "SIGN_UP_REQUEST";
+export const SIGN_UP_SUCCESS = "SIGN_UP_SUCCESS";
+export const SIGN_UP_FAILURE = "SIGN_UP_FAILURE";
+
+export const SIGN_UP_CHECK_REQUEST = "SIGN_UP_CHECK_REQUEST";
+export const SIGN_UP_CHECK_SUCCESS = "SIGN_UP_CHECK_SUCCESS";
+export const SIGN_UP_CHECK_FAILURE = "SIGN_UP_CHECK_FAILURE";
+
 
 const reducer = (state = initialState, action)=>{
     return produce(state ,(draft) => {
         switch(action.type){
+                case SIGN_UP_CHECK_REQUEST: 
+                console.log('중복체크진입')
+             
+                break;
+                case SIGN_UP_CHECK_SUCCESS:
+                console.log('중복체크성공')
+                console.log(action.data)
+                draft.emailCheck = action.data
+                break;
+                case SIGN_UP_CHECK_FAILURE: 
+                console.log('중복체크실패') 
+            
+                     
+                break;
+                case SIGN_UP_REQUEST: 
+                console.log('가입진입')
+             
+                break;
+                case SIGN_UP_SUCCESS:
+                console.log('가입성공')
+                console.log(action.data)
+            
+                break;
+                case SIGN_UP_FAILURE: 
+                console.log('가입실패') 
+            
+                     
+                break;
+                case ADD_COMMENT_REQUEST: 
+                console.log('댓글진입')
+             
+                break;
+                case ADD_COMMENT_SUCCESS:
+                console.log('댓글성공')
+                console.log(action.data)
+            
+                break;
+                case ADD_COMMENT_FAILURE: 
+                console.log('댓글실패')       
+                break;
                 case IMAGE_PREVIEW_REQUEST: 
                 console.log('답변진입')
                 draft.img.push(action.data)
@@ -224,8 +152,7 @@ const reducer = (state = initialState, action)=>{
                 console.log(action.data)
             
                 break;
-                case IMAGE_PREVIEW_FAILURE:
-                
+                case IMAGE_PREVIEW_FAILURE:        
                 break;
                 case NOTICE_CREATE_REQUEST: 
                 console.log('답변진입')
@@ -233,8 +160,10 @@ const reducer = (state = initialState, action)=>{
                 break;
                 case NOTICE_CREATE_SUCCESS:
                 console.log('답변성공')
-                console.log(action.data)
-               
+                console.log(action.data)          
+                break;
+                case NOTICE_CREATE_FAILURE:
+                    console.log('게시글 생성 실패')
                 break;
                 case NOTICE_DETAIL_REQUEST: 
                 console.log('게시판 상세 진입')
@@ -243,16 +172,26 @@ const reducer = (state = initialState, action)=>{
                 case NOTICE_DETAIL_SUCCESS:
                     console.log('게시판 상세 성공')
                     console.log(action.data)
-                    draft.notice = action.data
-             
-                break;
-            
+                    draft.notice= action.data
+                    draft.tags = action.data.tags;          
+                break;         
                 case NOTICE_DETAIL_FAILURE:
                     console.log('게시판 상세 실패')
                     
                 break;
-                case NOTICE_CREATE_FAILURE:
-                
+                case CHOOSE_ANSWER_REQUEST: 
+                console.log('채택진입')
+             
+                break;
+                case CHOOSE_ANSWER_SUCCESS:
+                console.log('채택성공')
+                console.log(action.data)
+            
+                break;
+                case CHOOSE_ANSWER_FAILURE: 
+                console.log('채택실패') 
+             
+                     
                 break;
                 case ADD_ANSWER_REQUEST: 
                     console.log('답변진입')
@@ -261,17 +200,41 @@ const reducer = (state = initialState, action)=>{
                 case ADD_ANSWER_SUCCESS:
                     console.log('답변성공')
                     console.log(action.data)
-               draft.qna  =  draft.qna.filter((v) => v.qnaIdx === action.data.questionIdx)
+             /*   draft.qna  =  draft.qna.filter((v) => v.qnaIdx === action.data.questionIdx) */
                    /*  draft.qna = draft.qna.filter((v) => v.qnaIdx === action.data.questionIdx) */
-                draft.qna[0].answer.unshift(action.data)
+         /*        draft.qna[0].answer.unshift(action.data) */
+          
                     break;
                 case ADD_ANSWER_FAILURE:
                     console.log('답변실패')
                     
                     break;
-                case QNA_DETAIL_REQUEST: 
-                    console.log('qna 등록 진입')
-            
+                    case ANSWER_DETAIL_REQUEST: 
+                    console.log('답변진입')
+                    console.log(action.data)
+                    break;
+                    case ANSWER_DETAIL_SUCCESS:
+                        console.log('답변성공')
+                        console.log(action.data)
+                        break;
+                    case ANSWER_DETAIL_FAILURE:
+                    console.log('답변실패')
+                    
+                    break;
+                 case QNAS_REQUEST: 
+                console.log('qna 리스트 진입')
+        
+                break;
+                case QNAS_SUCCESS:
+                    console.log('qna 리스트 성공')
+                    console.log(action.data)
+                    draft.qna= draft.qna.concat(action.data.content)
+                  draft.qnaList = draft.qnaList + action.data.content
+              
+                    break;
+                case QNAS_FAILURE:
+                    console.log('qna 등록 실패')
+                    
                 break;
                 case QNA_CREATE_REQUEST: 
                     console.log('qna 작성 진입')
@@ -279,46 +242,30 @@ const reducer = (state = initialState, action)=>{
                 break;
                 case QNA_CREATE_SUCCESS:
                     console.log('qna 작성 성공')
-                    draft.qna.unshift(addQnaQuestion(action.data))
+                    draft.qna = action.data
                     break;
                 case QNA_CREATE_FAILURE:
                     console.log('qna 작성 실패')
                     
                     break;
                 case QNA_DETAIL_REQUEST: 
-                    console.log('qna 등록 진입')
-            
-                break;
-                case QNA_DETAIL_REQUEST: 
                     console.log('qna 상세 진입')
-                    console.log(action.data)
+                   
                 break;
                 case QNA_DETAIL_SUCCESS:
                     console.log('qna 상세 성공')
                     console.log(action.data)
-                
-                
-                    return draft.qna;
+                    draft.qnaDetail = action.data;
+                    /* 날짜 배열로 들어오는 애들 처리 */
+                    draft.qnaDetail.queRegdate = draft.qnaDetail.queRegdate.slice(0,3).join('.')
+                    /* 페이징 처리 */
+                    draft.qnaDetail.answerList.sort((a,b) => (b.ansIdx)-(a.ansIdx))
+                 
+                   break;
                 case QNA_DETAIL_FAILURE:
                     console.log('qna 상세 실패')
                     
-                break;
-                case QNA_DETAIL_REQUEST: 
-                    console.log('qna 등록 진입')
-                 
-                break;
-                case QNAS_SUCCESS:
-                    console.log('qna 등록 성공')
-                   
-                    break;
-                case QNAS_FAILURE:
-                    console.log('qna 등록 실패')
-                    
-                break;
-                case QNAS_REQUEST: 
-                    console.log('이미지 등록 진입')
-            
-                break;
+                break;       
                 case IMAGE_UPLOAD_REQUEST:
                     console.log('이미지 등록 진입')
                     break;
@@ -395,16 +342,12 @@ const reducer = (state = initialState, action)=>{
                 case BOARDS_DETAIL_SUCCESS:
                     console.log('게시판 상세 성공')
                     console.log(action.data)
-                    draft.board = action.data
-             
+                    draft.board = action.data       
                 break;
             
                 case BOARDS_DETAIL_FAILURE:
-                    console.log('게시판 상세 실패')
-                    
-                break;
-
-
+                    console.log('게시판 상세 실패')                 
+            break;
                 case NOTICELIST_REQUEST: 
                     console.log('공지사항 리듀서 진입')
              
