@@ -57,14 +57,21 @@ const AppLayout = ({children}) =>{
                
             </div>
             <Row gutter={8}>
-                <Col xs={24} md={4}>
-                  {user && user ? <UserForm/> :<LoginForm />}
+                <Col xs={0} md={2}>
+               
                 </Col>
-                <Col xs={24} md={16}>
-                {children}
+                <Col 
+                xs={24}
+                 md={20} 
+                >
+                  <div style={{display:'flex', flexDirection:'row' , flexWrap:'wrap'}}>
+                  {children}
+                  </div>
+             
+                 
                 </Col>
-                <Col xs={24} md={4}>
-                <a href="https://www.naver.com" target="_blank" rel="noreferrer noopener">Made by gachi</a>
+                <Col xs={0} md={2}>
+              
                 </Col>
              </Row>
              <BackTop>

@@ -14,8 +14,7 @@ function* logIn(action){
 
     try{
         const result = yield call(loginAPI,action.data)
-        console.log(result.headers.Cookie)
-        
+
         yield put({
             type: LOG_IN_SUCCESS,
             data: result.data
@@ -23,7 +22,7 @@ function* logIn(action){
     }catch(err){
         yield put({
             type: LOG_IN_FAILURE,
-            
+    /*         err: err.response.data */
         })
     }
 }

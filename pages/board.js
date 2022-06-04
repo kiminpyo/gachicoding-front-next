@@ -1,20 +1,22 @@
 import React, {useEffect, useCallback} from 'react';
 import { useDispatch, useSelector } from "react-redux";
+
 import {END} from 'redux-saga';
 import wrapper from '../store/configureStore';
 import axios from 'axios'
+
 import Link from 'next/link';
 import AppLayout from "../components/AppLayout";
 import BoardList from "../components/BoardList";
 import { BOARDS_PAGING_REQUEST, BOARDS_REQUEST, NOTICELIST_REQUEST } from '../reducers/post';
-import { Button, Pagination } from 'antd';
+import { Button, Pagination,  Input, Select, Option} from 'antd';
 import { LOAD_USER_REQUEST } from '../reducers/user';
 import MyButton from '../components/MyButton';
 import useInput from '../hooks/useInput';
-import Router from 'next/router'
-import { Input, Select, } from 'antd';
-const Board = () =>{
+import Router, { useRouter } from 'next/router'
 
+const Board = () =>{
+    const router = useRouter();
     const dispatch = useDispatch();
     const {board}  = useSelector((state) => state.post)
     const {state} = useSelector((state) => state.post);
@@ -50,12 +52,14 @@ const Board = () =>{
     const onSearch = useCallback(() =>{
         
         /*  동적라우팅 => 알아서 주소로 가서 서버사이드 렌더링 (getsersideprops실행)*/
-        Router.push(`/board/${searchInput}`)
+        router.push(`/board/${searchInput}`)
       },[searchInput])
+if(board){
 
+    
     return (
         <AppLayout>
-            {board.map((board) => <BoardList data={board}/>)} 
+            {board && board.map((board) => <BoardList data={board}/>)} 
             <div style={{width: '100%',textAlign:'center'}}>
             <Pagination
             total={50}
@@ -69,8 +73,8 @@ const Board = () =>{
                 value={searchInput}
                 onChange={onChangeSearchInput}
                 onSearch={onSearch}/>
-            <Link href={`/create/board`}>
-                <MyButton text={'글쓰기'} type={'positive'}/>
+            <Link href={`/create/board`}><a > <MyButton text={'글쓰기'} type={'positive'}/></a>
+               
             </Link>
             </div>
             </div>
@@ -79,6 +83,7 @@ const Board = () =>{
             
         </AppLayout>
         )
+}
 }
 /* context안에 store가 들어있다. */
 export const getServerSideProps = wrapper.getServerSideProps((store)=> async({req}) => {
@@ -96,9 +101,6 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
      store.dispatch({
         type: LOAD_USER_REQUEST
      }); 
-     store.dispatch({
-        type: NOTICELIST_REQUEST
-     });
  
     store.dispatch(END);
     await store.sagaTask.toPromise();
