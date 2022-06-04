@@ -86,21 +86,7 @@ const Qna = () => {
     return (
         <QnaAppLayout>
              <div style={{width: '100%',textAlign:'center'}}>
-                        <Select
-                labelInValue
-                defaultValue={{
-                  value: 'lucy',
-                  label: 'Lucy (101)',
-                }}
-                style={{
-                  width: 120,
-                }}
-                onChange={handleChange}
-                render={(v)=> console.log(v)}
-              >
-                <Option value='jack'>Jack (100)</Option>
-                <Option value="lucy">Lucy (101)</Option>
-              </Select>
+             
               <div style={{textAlign:'end'}}>
               <Input.Search 
               addonBefore={selectBefore}

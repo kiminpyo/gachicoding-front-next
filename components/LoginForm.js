@@ -34,7 +34,7 @@ return(
         <div>
                 <label htmlFor="user-email">이메일</label>
                 <br />
-                <Input name="user-email" type="email"value={email} onChange={onChangeEmail}/>
+                <Input name="user-email" value={email} onChange={onChangeEmail}/>
             </div>
             <div>
             <label htmlFor="user-password">비밀번호</label>

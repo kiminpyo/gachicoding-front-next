@@ -1,6 +1,5 @@
 import produce from 'immer';
-import faker from 'faker';
-import shortId from 'shortid';
+
 
 export const initialState = {
     emailCheck: null,

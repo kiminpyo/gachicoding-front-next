@@ -48,7 +48,7 @@ const QnaList = ({data,onClick}) => {
                 : data.queContent}
               </div>
               <div style={{height:'30px',overflow:'hidden'}} >
-                {data.queRegdate.slice(0,3).join('.') + " " + data.queRegdate.slice(3,5).join('시') + "분"}
+                {data.queRegdate.slice(0,3).join('.') + " " + data.queRegdate.slice(3,5).join(':') }
               </div>
             </div>
             <hr />

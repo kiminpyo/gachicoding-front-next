@@ -23,7 +23,7 @@ import CommentForm from '../../components/CommentForm';
     const answerList =useSelector((state) => state.post.qnaDetail?.answerList)
     const {user}  =useSelector((state) =>state.user)
   
-    const [answer , setAnswer] = useState(!answer);
+    const [answer , setAnswer] = useState(false);
     const [commentAnswer, setCommentAnswer] = useState('');
     
     const onChangeCommentAnswer = (e) =>{
@@ -45,7 +45,7 @@ import CommentForm from '../../components/CommentForm';
     
     const onClickAnswer =() =>{
     
-        setAnswer(!answer)
+        setAnswer((prev)=> !prev )
         
     
     }
@@ -76,7 +76,7 @@ import CommentForm from '../../components/CommentForm';
             })
             /* 답변 창을 닫기 + 답변내용 지우기 */
             console.log('hi')
-            setAnswer(!answer)
+            setAnswer((prev)=>!prev)
             setCommentAnswer('')
             /* 게시글 다시 request */
             dispatch({
@@ -104,7 +104,7 @@ import CommentForm from '../../components/CommentForm';
                 
                 <Button value={answer} onClick={onClickAnswer}>답변하기</Button>
                 </div>
-                {!answer && 
+                {answer && 
                 <Form
                 onFinish={onSubmit}>   
                     <input  
