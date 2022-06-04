@@ -11,6 +11,7 @@ import AppLayout from '../../components/AppLayout';
 import {END} from 'redux-saga';
 import wrapper from '../../store/configureStore';
 import { LOAD_USER_REQUEST } from '../../reducers/user';
+import { useRouter } from 'next/router';
 
 
 const ReactQuill = dynamic(async () => {
@@ -42,8 +43,10 @@ const ReactQuillContainer = ({ description, setDescription,title,setTitle, tag,}
   const dispatch = useDispatch();
   const {user} = useSelector((state) => state.user)
   const [hashtag, setHashtag] =useState([]);
+  const router = useRouter();
+  console.log(router.query.data)
   const submitTag =(e) =>{
-  
+
     const value = document.getElementsByName('tag');
     console.log(value[0].value)
     const $outer = document.querySelector('.tagouter')
@@ -79,13 +82,14 @@ const ReactQuillContainer = ({ description, setDescription,title,setTitle, tag,}
  }
  const tagListClass = ""
   const onSubmit = () =>{
+    console.log(router.query.data)
     console.log(quillRef.current.state.value)
     const value =document.getElementsByName('title')
     console.log(value[0].value)
     if(  user.userEmail || quillRef.current.state.value){
       const data = {
         
-        userEmail: user.userEmail,
+        userEmail: router.query.data,
         boardTitle: value[0].value,
         boardContent: quillRef.current.state.value,
         tags: hashtag
@@ -186,23 +190,5 @@ const ReactQuillContainer = ({ description, setDescription,title,setTitle, tag,}
  
   );
 }
-export const getServerSideProps = wrapper.getServerSideProps((store)=> async({req}) => {
 
-  const cookie = req ? req.headers.cookie : '';
-  
-  axios.defaults.headers.Cookie = '';
-  /* 쿠키가 있고, 서버에 요청을 할 때만 넣는다. (다른사람의 내 쿠키 공유 문제 제거. 굉장히 중요하다) */
-  if (req && cookie) {
-      axios.defaults.headers.Cookie = cookie;
-    }
-  store.dispatch({
-      type: NOTICELIST_REQUEST
-   });
- 
- store.dispatch({
-  type:LOAD_USER_REQUEST
-}); 
-  store.dispatch(END);
-  await store.sagaTask.toPromise();
-})
 export default ReactQuillContainer;

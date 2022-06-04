@@ -10,15 +10,16 @@ import AppLayout from '../components/AppLayout';
 import { NOTICELIST_REQUEST } from '../reducers/post';
 import { LOAD_USER_REQUEST } from '../reducers/user';
 import MyButton from '../components/MyButton';
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import useInput from '../hooks/useInput';
 
 
 const Notice = () => {
-
+  const router = useRouter();
   const [searchInput, onChangeSearchInput] = useInput('');
   const [content, setContent] = useState('');
   const dispatch = useDispatch();
+  const {user} = useSelector((state) => state.user)
   const {notice}  = useSelector((state) => state.post)
 
 
@@ -40,6 +41,18 @@ const Notice = () => {
       /*  동적라우팅 => 알아서 주소로 가서 서버사이드 렌더링 (getsersideprops실행)*/
       Router.push(`/notice/${searchInput}`)
     },[searchInput])
+
+    const createNotice =() =>{
+      if(!user.userEmail){
+        return null;
+      }
+      console.log(user.userEmail)
+        router.push({
+          pathname:'/create/notice',
+          query: { data: user.userEmail}
+        })
+          
+    }
     return (
       <AppLayout>
      {notice && notice.map((data) => <NoticeList key={data.notIdx} data={data}/>)}
@@ -57,9 +70,9 @@ const Notice = () => {
                 value={searchInput}
                 onChange={onChangeSearchInput}
                 onSearch={onSearch}/>
-            <Link href={`/create/notice`}>
+            <div onClick={createNotice}>
                 <MyButton text={'글쓰기'} type={'positive'}/>
-            </Link>
+            </div>
             </div>
             </div>
       </AppLayout>

@@ -27,7 +27,7 @@ const Logo = styled.div`
   };
 
 const AppLayout = ({children}) =>{ 
-
+    
     const {user} = useSelector((state) => state.user)
     const items = [
          { label: <Link href="/notice"><a>공지사항</a></Link>,
