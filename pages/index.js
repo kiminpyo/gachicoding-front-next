@@ -19,7 +19,7 @@ const Home = () =>{
     const {qna} = useSelector((state) => state.post)
      return(
         <AppLayout>
-            <Row>
+           {/*  <Row>
                 <Col xs={24}  sm={24} md={24} xl={24} span={24}>
                 <div style={{width:'100%', height: '300px'}}>
                 <div style={{width:'95%',border:'1px solid black',height:'20%',display:'flex',justifyContent: 'space-between'}}>
@@ -40,7 +40,7 @@ const Home = () =>{
                 <Col xs={24}  sm={24} md={12} xl={12} span={12}>
                 <MainBoard data={board?.board}/>
                 </Col>
-            </Row>
+            </Row> */}
         </AppLayout>
             
         )
@@ -63,7 +63,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
      store.dispatch({
         type: LOAD_USER_REQUEST
      }); 
-     store.dispatch({
+ /*     store.dispatch({
         type: NOTICELIST_REQUEST
     });
     store.dispatch({
@@ -73,7 +73,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
       store.dispatch({
         type: BOARDS_REQUEST
      });
- 
+  */
     store.dispatch(END);
     await store.sagaTask.toPromise();
 
