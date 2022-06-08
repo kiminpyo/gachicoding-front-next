@@ -33,6 +33,8 @@ export default class MyDocument extends Document {
         return(
             <Html>
                 <Head/>
+                <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Yeon+Sung&display=swap" rel="stylesheet" />
+        <meta charSet="utf-8" />
                 <body>
                     <Main/>
                     <NextScript/>

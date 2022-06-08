@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Yeon+Sung&display=swap');
+
+body{
+  font-family: 'Nanum Pen Script';
+  font-size: 20px
+  
+}
+.css-selector {
+	font-family: 'Nanum Pen Script', serif;
+}
+
+/* quill editor */
+.ql-editor{
+  min-height: 300px !important;
+  max-height: 800px;
+  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+
+.MyButton{
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    
+    padding: 10 10 20 20;
+ 
+    font-size : 18px;
+    /* 버튼글자가 길어 2줄이 되는것 방지 */
+    white-space: nowrap;
+    font-family: 'Nanum Pen Script';
+  }
+  .MyButton_default{
+   background-color: #ececec;
+   color: black ;
+  }
+  .MyButton_default{
+    background-color: #ececec;
+    color: green !important ;
+   }
+  .MyButton_positive{
+    background-color: #64c964;
+    color: white;
+  }
+  .MyButton_negative{
+    background-color: #fd565f;
+    color:white;
+  }
+
+  /* userform*/
+
+  li{
+   list-style: none  
+  }

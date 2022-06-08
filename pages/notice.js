@@ -4,7 +4,7 @@ import {END} from 'redux-saga';
 import wrapper from '../store/configureStore';
 import axios from 'axios'
 import Link from 'next/link';
-import { Button, Pagination,  Input, Select, Option} from 'antd';
+import { Button, Pagination,  Input, Select} from 'antd';
 import NoticeList from '../components/NoticeList';
 import AppLayout from '../components/AppLayout';
 import { NOTICELIST_REQUEST } from '../reducers/post';
@@ -12,7 +12,7 @@ import { LOAD_USER_REQUEST } from '../reducers/user';
 import MyButton from '../components/MyButton';
 import Router, { useRouter } from 'next/router'
 import useInput from '../hooks/useInput';
-
+const { Option } = Select;
 
 const Notice = () => {
   const router = useRouter();
