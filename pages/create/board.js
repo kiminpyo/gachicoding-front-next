@@ -25,10 +25,11 @@ const CreateBoard = () =>{
             dispatch({
                     type: BOARD_CREATE_REQUEST,
                     data: {          
-                        
-                        boardTitle: title,
+                        boardViews: 0,
                         boardContent: text,
-                        files: img,
+                        boardTitle: title,
+                        tags: ["Java"],
+                        userEmail: user.userEmail
                     }
             })
             
@@ -73,7 +74,7 @@ const CreateBoard = () =>{
             <input type="text" value ={title}  onChange={onChangetitleHandler}/>
             <br/>
             <label htmlFor="">해시태그</label>
-            <input type="url" name="" id="" />
+            <input type="text" name="" id="" />
 
             <label htmlFor="">내용:</label>
             <textarea name="content" id="" cols="30" rows="10" value={text} onChange={onChangeCotentHandler}>  

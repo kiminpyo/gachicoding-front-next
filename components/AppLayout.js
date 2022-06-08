@@ -57,13 +57,13 @@ const AppLayout = ({children}) =>{
                
             </div>
             <Row gutter={8}>
-                <Col xs={24} md={4}>
+                <Col xs={24} sm={24} md={6} xl={6}>
                   {user && user ? <UserForm/> :<LoginForm />}
                 </Col>
-                <Col xs={24} md={16}>
+                <Col xs={24} sm={24} md={14} xl={14}>
                 {children}
                 </Col>
-                <Col xs={24} md={4}>
+                <Col xs={24} sm={24} md={4} xl={4}>
                 <a href="https://www.naver.com" target="_blank" rel="noreferrer noopener">Made by gachi</a>
                 </Col>
              </Row>

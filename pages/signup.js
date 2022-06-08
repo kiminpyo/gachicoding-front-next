@@ -106,6 +106,7 @@ const Signup = () => {
         if(checkEmail === false){
           return alert('이메일 중복체크를 해주세요')
         }else{
+          console.log(profile[0])
           if(profile[0]){
             dispatch({
               type: SIGN_UP_REQUEST,
