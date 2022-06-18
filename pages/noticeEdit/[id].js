@@ -7,55 +7,45 @@ import { useRouter } from 'next/router';
 import {Form, Button} from 'antd'
 import ImagePreview from '../../components/ImagePreview';
 import AppLayout from '../../components/AppLayout';
-import { BOARDS_DETAIL_REQUEST, BOARD_EDIT_REQUEST, IMAGE_UPLOAD_REQUEST } from '../../reducers/post';
+import { BOARDS_DETAIL_REQUEST, BOARD_EDIT_REQUEST, IMAGE_UPLOAD_REQUEST, NOTICE_DETAIL_REQUEST } from '../../reducers/post';
 import BoardEditor from '../../components/BoardEditor';
 import Link from 'next/link';
 import useInput from '../../hooks/useInput';
-const edit = () => {
+import { LOAD_USER_REQUEST } from '../../reducers/user';
+const noticeEdit = () => {
+   
+    const boardContent =useSelector((state)=> state.post.notice?.boardContent)
 
+        /* 리듀서에 initialstate에 있는 단어는 렌더전에도 존재. 처음 렌더때 리듀서로 불러온 action.data는 렌더 후에 발생.
+         => 바로 notice.boardContent를 찍으면 undefined가 발생*/
+    
+    useEffect(() =>{
+       if(boardContent){setText(boardContent) }
+           
+    },[boardContent])
+    const [title, setTitle] = useState('')
+    const [text, setText] = useState('')
+    
+  
+    
     const router = useRouter();
     const dispatch = useDispatch();
     const { id } = router.query;
     const imgInput = useRef();
    
-    const {img} = useSelector((state) => state.post);
-    const {board}  = useSelector((state) => state.post);
-   
-    const [title, setTitle] = useState(board.boardTitle)
-    const [text, setText] = useState(board.boardContent)
-  
-        useEffect(() =>{
-            if(board){
-                setTitle(board.boardTitle)
-                setText(board.boardContent)
-            }
-    },[board])
-         
-   
-    
-  
-    console.log(board)
-    console.log(board.boardTitle)
-    
-  
     useEffect(()=>{
         dispatch({
-            type: BOARDS_DETAIL_REQUEST,
+            type: NOTICE_DETAIL_REQUEST,
             data: id
         })
         
     },[id])
-   
-   
  
     const onSubmitForm = useCallback(() => {
-
         if(!text || !text.trim()){
             return alert('게시글을 작성하세요')
         }
-
-            dispatch({
-                
+            dispatch({           
                     type: BOARD_EDIT_REQUEST,
                     data: {          
                         boardIdx: id,
@@ -68,21 +58,6 @@ const edit = () => {
             console.log({id,title,text})
         
     },[text,title])
-    const onClickImageUpload = useCallback(() =>{
-        imgInput.current.click();
-    },[imgInput.current])
-
-    const onChangeImages =useCallback((e) =>{
-        console.log('images', e.target.files)
-        const imageFormData = new FormData();
-        [].forEach.call(e.target.files, (files)=>{
-            imageFormData.append('files', files)        
-        });
-            dispatch({
-            type: IMAGE_UPLOAD_REQUEST,
-            data: imageFormData
-            })    
-        },[])
         
         const onChangetitleHandler = useCallback((e) =>{
             setTitle(e.target.value)
@@ -90,8 +65,6 @@ const edit = () => {
         const onChangeCotentHandler= useCallback((e)=>{
             setText(e.target.value)
         },[text])
-    
- 
         return (
         <AppLayout>
            {/*  <BoardEditor data={board}/> */}
@@ -112,25 +85,13 @@ const edit = () => {
             </textarea>
             <div style={{textAlign:'center', paddingTop:'30px'}}><h2>미리보기</h2></div>
             <div style={{display:'flex', padding:'30px', width:'100%'}}> 
-            { img ?  img.map((v,i) => <ImagePreview key={i} data={v}/>): null}
+         
             </div>
             </div> 
                   
         <Button type="primary" htmlType="submit">수정하기</Button>
         </Form>
-        <form action="post"
-        enctype="multipart/form-data" >
-        <input
-            type= "file"
-            name="files" 
-            multiple 
-            hidden 
-            accept="image/*"
-            ref={imgInput}
-            onChange={onChangeImages} />
-            <Button onClick={onClickImageUpload}>이미지 업로드</Button>
-           
-        </form>
+       
         </AppLayout>
         )
    
@@ -149,9 +110,11 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
   if (req && cookie) {
       axios.defaults.headers.Cookie = cookie;
     }
-  
+    store.dispatch({
+        type: LOAD_USER_REQUEST
+     });
 
   store.dispatch(END);
   await store.sagaTask.toPromise();
 })
-export default edit;
+export default noticeEdit;
