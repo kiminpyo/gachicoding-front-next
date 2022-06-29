@@ -12,13 +12,13 @@ import BoardEditor from '../../components/BoardEditor';
 import Link from 'next/link';
 import MyButton from '../../components/MyButton';
 import { LOAD_USER_REQUEST } from '../../reducers/user';
-const detail = () => {
+const boardDetail = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     /* 게시판 번호불러오기 */
     const { id } = router.query;
-    const {board}  = useSelector((state) => state.post);
-   
+    const {notice}  = useSelector((state) => state.post);
+    console.log(notice)
 
     useEffect(()=>{
         dispatch({
@@ -46,17 +46,17 @@ const detail = () => {
 
  
 
-    if(JSON.stringify(board.fileList)){
+/*     if(JSON.stringify(board.fileList)){ */
         /* arr */
     
-        console.log(board.fileList)
+      /*   console.log(board.fileList)
         console.log(JSON.stringify(board.fileList))
         console.log(typeof JSON.parse(JSON.stringify(board.fileList)))
         const fileListobj =JSON.parse(JSON.stringify(board.fileList));
         console.log(Object.keys(fileListobj))
         console.log(Object.values(fileListobj))
         const fileList = Object.values(fileListobj);
-        fileList.map(v=> console.log(v))
+        fileList.map(v=> console.log(v)) */
 
        
    
@@ -65,7 +65,7 @@ const detail = () => {
     
        
         return <AppLayout>
-            <div>
+       {/*      <div>
                 <label htmlFor="">제목:</label>
                 {board.boardTitle}
                 </div> 
@@ -78,19 +78,20 @@ const detail = () => {
             <div>
                 </div>
            
-            </div>
+            </div>*/}
+            
               <Link href={`/edit/${id}`} >
-                  <MyButton text={'수정'} type={'positive'} data={board}/>
-              </Link>
+                  <MyButton text={'수정'} type={'positive'} />
+              </Link>  
               <MyButton onClick={onDeleteBoard} text={'삭제'} type={'negative'}></MyButton>
        
-                 
+                
         </AppLayout>
-    }else{
+ /*    }else{
         
         return <div>hi</div>
     }
- 
+  */
   
 }
 /* context안에 store가 들어있다. */
@@ -111,4 +112,4 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
   store.dispatch(END);
   await store.sagaTask.toPromise();
 })
-export default detail;
+export default boardDetail;

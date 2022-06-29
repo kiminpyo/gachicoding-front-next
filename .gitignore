@@ -1,2 +1,4 @@
 .next
 node_modules
+/front/build/
+gachicoding-front.pem

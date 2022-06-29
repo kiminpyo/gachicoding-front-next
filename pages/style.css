@@ -5,6 +5,10 @@ body{
   font-size: 20px
   
 }
+.css-selector {
+	font-family: 'Nanum Pen Script', serif;
+}
+
 /* quill editor */
 .ql-editor{
   min-height: 300px !important;

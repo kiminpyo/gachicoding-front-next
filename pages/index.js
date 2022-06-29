@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {memo, useEffect} from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import {END} from 'redux-saga';
 import wrapper from '../store/configureStore';
@@ -7,13 +7,40 @@ import axios from 'axios'
 import AppLayout from '../components/AppLayout';
 import LoginForm from '../components/LoginForm';
 import { LOAD_USER_REQUEST, LOG_IN_REQUEST } from '../reducers/user';
+import { BOARDS_REQUEST, NOTICELIST_REQUEST, QNAS_REQUEST } from '../reducers/post';
+import { Row,Col } from 'antd';
 
+import MainQna from '../components/MainQna';
+import MainBoard from '../components/MainBoard';
+import MainNotice from '../components/MainNotice';
 const Home = () =>{
-
-
+    const {board} = useSelector((state) => state.post)
+    const {notice} = useSelector((state) => state.post)
+    const {qna} = useSelector((state) => state.post)
      return(
-            <AppLayout>
+        <AppLayout>
+            <Row>
+                <Col xs={24}  sm={24} md={24} xl={24} span={24}>
+                <div style={{width:'100%', height: '300px'}}>
+                <div style={{width:'95%',border:'1px solid black',height:'20%',display:'flex',justifyContent: 'space-between'}}>
+                    <div style={{marginLeft:'20px'}}>가치고민</div>
+                    <div style={{marginRight:'20px'}}>+더보기</div>
+                </div>
                 
+                <div style={{width:"95%",border: '1px solid black', height: '80%',}}>
+                {qna && qna.map((v,i) => <MainQna data={v}/>)}
+                <div style={{textAlign:'center'}}>더보기</div>
+                </div>
+    </div>
+              
+                </Col>
+                <Col xs={24}  sm={24} md={12} xl={12} span={12}>
+                <MainNotice data={notice?.notice}/>
+                </Col>
+                <Col xs={24}  sm={24} md={12} xl={12} span={12}>
+                <MainBoard data={board?.board}/>
+                </Col>
+            </Row>
         </AppLayout>
             
         )
@@ -36,7 +63,16 @@ export const getServerSideProps = wrapper.getServerSideProps((store)=> async({re
      store.dispatch({
         type: LOAD_USER_REQUEST
      }); 
-    
+     store.dispatch({
+        type: NOTICELIST_REQUEST
+    });
+    store.dispatch({
+        type: QNAS_REQUEST,
+        
+      })
+      store.dispatch({
+        type: BOARDS_REQUEST
+     });
  
     store.dispatch(END);
     await store.sagaTask.toPromise();
